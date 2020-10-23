@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text, Card, Avatar } from "react-native-elements";
-import HeaderHome from "./../components/Header";
+import HeaderHome from "./../components/HeaderHome";
 import { AuthContext } from "../providers/AuthProvider";
 const NotificationScreen = (props) => {
   return (

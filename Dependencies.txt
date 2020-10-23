@@ -3,3 +3,5 @@ expo install react-native-reanimated react-native-gesture-handler react-native-s
 npm install @react-navigation/material-bottom-tabs react-native-paper
 npm install @react-navigation/drawer
 npm install react-native-elements
+npm install apisauce
+npm install @react-native-community/netinfo

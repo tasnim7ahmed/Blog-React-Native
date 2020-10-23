@@ -13,7 +13,7 @@ const SignUpScreen = (props) => {
   return (
     <View style={styles.viewStyle}>
       <Card>
-        <Card.Title>Welcome to AuthApp!</Card.Title>
+        <Card.Title>Welcome to My Blog!</Card.Title>
         <Card.Divider />
         <Input
           leftIcon={<Ionicons name="ios-person" size={24} color="black" />}

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { View, StyleSheet, AsyncStorage } from "react-native";
-import { Text, Card, Button, Avatar, Header } from "react-native-elements";
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { Text, Card, Avatar } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
-import HeaderHome from "./../components/Header";
+import HeaderHome from "./../components/HeaderHome";
 const ProfileScreen = (props) => {
   return (
     <AuthContext.Consumer>
