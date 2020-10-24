@@ -1,6 +1,6 @@
 import React from "react";
 import { Header } from "react-native-elements";
-
+import * as firebase from "firebase";
 import { AuthContext } from "../providers/AuthProvider";
 const HeaderHome = (props) => {
   return (
@@ -17,8 +17,16 @@ const HeaderHome = (props) => {
             icon: "lock-outline",
             color: "#fff",
             onPress: function () {
-              auth.setIsLoggedIn(false);
-              auth.setCurrentUser({});
+              firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                  auth.setIsLoggedIn(false);
+                  auth.setCurrentUser({});
+                })
+                .catch((error) => {
+                  alert(error);
+                });
             },
           }}
         />

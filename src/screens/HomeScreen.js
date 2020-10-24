@@ -105,28 +105,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-
-
-
-
-
-While using PostCard - 
-
-<PostCard
-
-ProfileNav = {
-  function(){
-    props.navigation.navigate('ProfileScreen');
-  }
-}
-/>
-
-In PostCard Component Definition - 
-
-<Card>
-
-  <Button
-  
-  onPress:{ProfileNav}
-  />
-</Card>
