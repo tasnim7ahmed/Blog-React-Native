@@ -11,9 +11,9 @@ import PostCard from "./../components/PostCard";
 import HeaderHome from "../components/HeaderHome";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../providers/AuthProvider";
-import { getPosts } from "./../requests/Posts";
-import { getUsers } from "./../requests/Users";
 import { useNetInfo } from "@react-native-community/netinfo";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const HomeScreen = (props) => {
   const netinfo = useNetInfo();
@@ -21,41 +21,34 @@ const HomeScreen = (props) => {
     alert("No Internet!");
   }
   const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState("");
 
   const loadPosts = async () => {
     setLoading(true);
-
-    const response = await getPosts();
-    if (response.ok) {
-      setPosts(response.data);
-    } else {
-      alert(response.problem);
-    }
-  };
-  const loadUsers = async () => {
-    const response = await getUsers();
-    if (response.ok) {
-      setUsers(response.data);
-    } else {
-      alert(response.problem);
-    }
-    setLoading(false);
-  };
-  const getName = (id) => {
-    let name = "";
-    users.forEach((element) => {
-      if (element.id == id) {
-        name = element.name;
-      }
-    });
-    return name;
+    firebase
+      .firestore()
+      .collection("posts")
+      .orderBy("created_at", "desc")
+      .onSnapshot((querySnapshot) => {
+        let temp_posts = [];
+        querySnapshot.forEach((doc) => {
+          temp_posts.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        setPosts(temp_posts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        alert(error);
+      });
   };
 
   useEffect(() => {
     loadPosts();
-    loadUsers();
   }, []);
 
   return (
@@ -71,8 +64,36 @@ const HomeScreen = (props) => {
             <Input
               placeholder="What's On Your Mind?"
               leftIcon={<Entypo name="pencil" size={24} color="black" />}
+              onChangeText={(currentText) => {
+                setInput(currentText);
+              }}
             />
-            <Button title="Post" type="outline" onPress={function () {}} />
+            <Button
+              title="Post"
+              type="outline"
+              onPress={function () {
+                setLoading(true);
+                firebase
+                  .firestore()
+                  .collection("posts")
+                  .add({
+                    userId: auth.CurrentUser.uid,
+                    body: input,
+                    author: auth.CurrentUser.displayName,
+                    created_at: firebase.firestore.Timestamp.now(),
+                    likes: [],
+                    comments: [],
+                  })
+                  .then(() => {
+                    setLoading(false);
+                    alert("Post created Successfully!");
+                  })
+                  .catch((error) => {
+                    setLoading(false);
+                    alert(error);
+                  });
+              }}
+            />
           </Card>
           <ActivityIndicator size="large" color="red" animating={loading} />
 
@@ -81,9 +102,9 @@ const HomeScreen = (props) => {
             renderItem={({ item }) => {
               return (
                 <PostCard
-                  author={getName(item.userId)}
-                  title={item.title}
-                  body={item.body}
+                  author={item.data.author}
+                  title={item.id}
+                  body={item.data.body}
                 />
               );
             }}
